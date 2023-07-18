@@ -4,6 +4,8 @@ import bodyParser from 'body-parser'
 import env from 'dotenv'
 import {Configuration, OpenAIApi} from 'openai'
 
+const port = 3080
+
 const app = express()
 
 env.config()
@@ -21,7 +23,7 @@ const openai = new OpenAIApi(configuration)
 
 
 // listeninng
-app.listen("3080", ()=>console.log("listening on port 3080"))
+app.listen(port, ()=>console.log(`listenint on http://localhost:${port}/`))
 
 
 // dummy route to test
@@ -44,8 +46,7 @@ app.post('/', async (req, res)=>{
         res.json({message: response.data.choices[0].text})
 
     }catch(e){
-        
-        res.send(e).status(400)
         console.log(e)
+        res.send(e).status(400)
     }
 })
