@@ -1,40 +1,51 @@
 import express from 'express'
-import cors from "cors"
+import cors from 'cors'
 import bodyParser from 'body-parser'
-import env from "dotenv"
-import {Configuration,OpenAIApi} from 'openai'
-const port = 3080
+import env from 'dotenv'
+import {Configuration, OpenAIApi} from 'openai'
 
 const app = express()
 
 env.config()
+
+app.use(cors())
 app.use(bodyParser.json())
 
-const configuration = new Configuration({
-    organization:"org-pE7oSArlvcM6Ai5Wf9xe1mu0",
-    apiKey: process.env.API_KEY
-})
 
+// Configure open api
+const configuration = new Configuration({
+    organization: "org-pE7oSArlvcM6Ai5Wf9xe1mu0",
+    apiKey: process.env.API_KEY // VISIT .env AND MAKE CHANGES
+})
 const openai = new OpenAIApi(configuration)
 
-app.listen(port, ()=>console.log(`http://localhost:${port}/`))
 
-app.get("/",(req,res)=>{
-    res.send("Hello World")
+// listeninng
+app.listen("3080", ()=>console.log("listening on port 3080"))
+
+
+// dummy route to test
+app.get("/", (req, res) => {
+    res.send("Hello World!")
 })
 
-app.post('/', async (req,res)=>{
-    const {message}=req.body
+
+//post route for making requests
+app.post('/', async (req, res)=>{
+    const {message} = req.body
+
     try{
-        const response = await openai.createCompletion ({
-            model: "text-devinci-003",
-            prompt:`${message}`,
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `${message}`,
             max_tokens: 100,
-            temperatur:.5
+            temperature: .5
         })
-        res.json({message: response.data.choices[0].value})
+        res.json({message: response.data.choices[0].text})
+
     }catch(e){
-        console.log(e)
+        
         res.send(e).status(400)
+        console.log(e)
     }
 })
