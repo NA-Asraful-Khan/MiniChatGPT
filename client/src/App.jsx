@@ -1,9 +1,12 @@
 
+import { useState } from 'react'
 import './App.css'
 import ChatBody from './components/ChatBody'
 import ChatInput from './components/ChatInput'
-
+// () ${}
 function App() {
+
+  const [chat,setChat]= useState([])
 
   return (
     <div className='bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between align-middle'>
